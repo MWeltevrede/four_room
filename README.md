@@ -31,3 +31,15 @@ env = gym_wrapper(gym.make('MiniGrid-FourRooms-v1',
 Similarly for the reachable testing config (```'four_room/configs/fourrooms_test_100_config.pl'```) and the unreachable testing config (```'four_room/configs/fourrooms_test_0_config.pl'```).
 
 Utility functions for turning observations into state or images can be found in ```utils.py``` and code for finding the optimal trajectories/q-values for any state can be found in ```shortest_path.py```.
+
+### Optimal Actions
+Use
+```
+from four_room.shortest_path import find_all_action_values
+from four_room.utils import obs_to_state
+
+state = obs_to_state(obs)
+q_values = find_all_action_values(state[:2], state[2], state[3:5], state[5:], 0.99)
+optimal_action = np.argmax(q_values)
+```
+to find the optimal action in a given state ```obs```.
