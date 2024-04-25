@@ -5,10 +5,15 @@ Requires Minigrid:
 ```
 pip install minigrid
 ```
-and NetworkX
+NetworkX
 ```
 pip install networkx
 ```
+and Dill
+```
+pip install dill
+```
+
 ## Usage
 From the parent directory of this repository you can import the environment with:
 ```
@@ -43,3 +48,10 @@ q_values = find_all_action_values(state[:2], state[2], state[3:5], state[5:], 0.
 optimal_action = np.argmax(q_values)
 ```
 to find the optimal action in a given state ```obs```.
+
+### Rendering Episodes
+Example code for rendering episodes can be found in ```render_episode.py```. You will need to additionaly install:
+```
+pip install imageio pyvirtualdisplay
+```
+(```pyvirtualdisplay``` is required to render states on headless servers.) 
