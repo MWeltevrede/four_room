@@ -37,6 +37,12 @@ Similarly for the reachable testing config (```'four_room/configs/fourrooms_test
 
 Utility functions for turning observations into state or images can be found in ```utils.py``` and code for finding the optimal trajectories/q-values for any state can be found in ```shortest_path.py```.
 
+### Train DQN Agent
+Example code for running a [Stable Baselines3](https://stable-baselines3.readthedocs.io/en/master/) DQN agent on the environment can be found in ```train_DQN.py```. In order to run it you additionally need to install:
+```
+pip install stablebaselines3 tensorboard wandb
+```
+
 ### Optimal Actions
 Use
 ```
@@ -50,7 +56,7 @@ optimal_action = np.argmax(q_values)
 to find the optimal action in a given state ```obs```.
 
 ### Rendering Episodes
-Example code for rendering episodes can be found in ```render_episode.py```. You will need to additionaly install:
+Example code for rendering episodes can be found in ```render_episode.py```. You will need to additionally install:
 ```
 pip install imageio pyvirtualdisplay
 ```
