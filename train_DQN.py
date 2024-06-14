@@ -60,7 +60,7 @@ class CNN(BaseFeaturesExtractor):
 
 gym.register('MiniGrid-FourRooms-v1', FourRoomsEnv)
 
-with open('configs/fourrooms_train_config.pl', 'rb') as file:
+with open('configs/train.pl', 'rb') as file:
     train_config = dill.load(file)
 
 num_train_configs = len(train_config['topologies'])

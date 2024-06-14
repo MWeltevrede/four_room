@@ -8,7 +8,7 @@ import gymnasium as gym
 
 gym.register('MiniGrid-FourRooms-v1', FourRoomsEnv)
 
-with open('configs/fourrooms_train_config.pl', 'rb') as file:
+with open('configs/train.pl', 'rb') as file:
     train_config = dill.load(file)
 
 env = gym_wrapper(gym.make('MiniGrid-FourRooms-v1', 
