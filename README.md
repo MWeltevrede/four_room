@@ -24,7 +24,7 @@ from four_room.env_wrappers import gym_wrapper
 
 gym.register('MiniGrid-FourRooms-v1', FourRoomsEnv)
 
-with open('four_room/configs/fourrooms_train_config.pl', 'rb') as file:
+with open('four_room/configs/train.pl', 'rb') as file:
     train_config = dill.load(file)
 
 env = gym_wrapper(gym.make('MiniGrid-FourRooms-v1', 
@@ -33,7 +33,7 @@ env = gym_wrapper(gym.make('MiniGrid-FourRooms-v1',
                                 doors_pos=train_config['topologies'], 
                                 agent_dir=train_config['agent directions']))
 ```
-Similarly for the reachable testing config (```'four_room/configs/fourrooms_test_100_config.pl'```) and the unreachable testing config (```'four_room/configs/fourrooms_test_0_config.pl'```).
+Similarly for the reachable/unreachable validation/testing configs.
 
 Utility functions for turning observations into state or images can be found in ```utils.py``` and code for finding the optimal trajectories/q-values for any state can be found in ```shortest_path.py```.
 
