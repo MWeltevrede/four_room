@@ -76,7 +76,7 @@ class FourRoomsEnv(MiniGridEnv):
         return valid_agent_pos, valid_goal_pos, valid_doors_pos
 
 
-    def __init__(self, agent_pos=None, agent_dir=None, goal_pos=None, doors_pos=None, max_steps=100, **kwargs):
+    def __init__(self, agent_pos=None, agent_dir=None, goal_pos=None, doors_pos=None, max_steps=100, size=9, **kwargs):
         """
             This code is only works for environment size 9
 
@@ -109,7 +109,7 @@ class FourRoomsEnv(MiniGridEnv):
             assert len(self._doors_pos_list) == self._list_size
 
 
-        self.size = 9
+        self.size = size
         mission_space = MissionSpace(mission_func=lambda: "reach the goal")
 
         super().__init__(
@@ -152,7 +152,7 @@ class FourRoomsEnv(MiniGridEnv):
             doors_pos = self._doors_pos_list[self._list_idx]
             agent_dir = self._agent_dir_list[self._list_idx]
         else:
-            doors_pos = (self._rand_int(0, 3), self._rand_int(0, 3), self._rand_int(0, 3), self._rand_int(0, 3))
+            doors_pos = (self._rand_int(0, (self.size // 2 - 1)), self._rand_int(0, (self.size // 2 - 1)), self._rand_int(0, (self.size // 2 - 1)), self._rand_int(0, (self.size // 2 - 1)))
             agent_dir = self._rand_int(0, 4)
 
 
