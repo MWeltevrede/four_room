@@ -11,10 +11,10 @@ import torch.nn.functional as F
 import numpy as np
 
 import dill
-from wrappers import gym_wrapper
+from four_room.wrappers import gym_wrapper
 
 import gymnasium as gym
-from env import FourRoomsEnv
+from four_room.env import FourRoomsEnv
 
 class CNN(BaseFeaturesExtractor):
     """

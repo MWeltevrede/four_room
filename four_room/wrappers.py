@@ -126,8 +126,14 @@ class TransposeFullyObsWrapper(FullyObsWrapper):
         obs_dict['image'] = full_grid
         return obs_dict
 
-def gym_wrapper(env): 
-    return ImgObsWrapper(
+def gym_wrapper(env, original_obs=True): 
+    if original_obs:
+        return ImgObsWrapper(
                 UndiscountedRewardWrapper(
                     SparseActionsWrapper(
                             TransposeFullyObsWrapper(env))))
+    else:
+        return ImgObsWrapper(
+                UndiscountedRewardWrapper(
+                    SparseActionsWrapper(
+                            SparseFullyObsWrapper(env))))

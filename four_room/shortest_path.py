@@ -3,7 +3,7 @@ from four_room.env import FourRoomsEnv
 import numpy as np
 
 
-def create_maze_graph(topology):
+def create_maze_graph(topology, size):
     """
         We turn our grid world into a graph as follows.
         - Every node is a combination of agent location (x,y) and agent direction
@@ -11,7 +11,8 @@ def create_maze_graph(topology):
     """
 
     graph = nx.DiGraph()
-    valid_agent_positions, _, _ = FourRoomsEnv.valid_positions(9)
+    valid_agent_positions, _, _ = FourRoomsEnv.valid_positions(size)
+    room_size = (size-3) // 2
 
     ### generate 4 rooms
     # add the nodes
@@ -19,30 +20,30 @@ def create_maze_graph(topology):
         graph.add_nodes_from([(x,y,dir) for x,y in valid_agent_positions])
 
     # add the edges in the up direction
-    for room_x, room_y in [(1,1), (1,5), (5,1), (5,5)]:
-        for i in range(0, 3):
-            for j in range(1,3):
+    for room_x, room_y in [(1,1), (1,room_size+2), (room_size+2,1), (room_size+2,room_size+2)]:
+        for i in range(0, room_size):
+            for j in range(1,room_size):
                 graph.add_edge((room_x + i, room_y + j, 3), (room_x + i, room_y + j - 1, 3))
     # add the edges in the right direction
-    for room_x, room_y in [(1,1), (1,5), (5,1), (5,5)]:
-        for i in range(0, 2):
-            for j in range(0,3):
+    for room_x, room_y in [(1,1), (1,room_size+2), (room_size+2,1), (room_size+2,room_size+2)]:
+        for i in range(0, room_size-1):
+            for j in range(0,room_size):
                 graph.add_edge((room_x + i, room_y + j, 0), (room_x + i + 1, room_y + j, 0))
     # add the edges in the down direction
-    for room_x, room_y in [(1,1), (1,5), (5,1), (5,5)]:
-        for i in range(0, 3):
-            for j in range(0,2):
+    for room_x, room_y in [(1,1), (1,room_size+2), (room_size+2,1), (room_size+2,room_size+2)]:
+        for i in range(0, room_size):
+            for j in range(0,room_size-1):
                 graph.add_edge((room_x + i, room_y + j, 1), (room_x + i, room_y + j + 1, 1))
     # add the edges in the left direction
-    for room_x, room_y in [(1,1), (1,5), (5,1), (5,5)]:
-        for i in range(1, 3):
-            for j in range(0,3):
+    for room_x, room_y in [(1,1), (1,room_size+2), (room_size+2,1), (room_size+2,room_size+2)]:
+        for i in range(1, room_size):
+            for j in range(0,room_size):
                 graph.add_edge((room_x + i, room_y + j, 2), (room_x + i - 1, room_y + j, 2))
 
     ## connect the direction layers together
-    for room_x, room_y in [(1,1), (1,5), (5,1), (5,5)]:
-        for i in range(0,3):
-            for j in range(0,3):
+    for room_x, room_y in [(1,1), (1,room_size+2), (room_size+2,1), (room_size+2,room_size+2)]:
+        for i in range(0,room_size):
+            for j in range(0,room_size):
                 graph.add_edge((room_x + i, room_y + j, 0), (room_x + i, room_y + j, 1))
                 graph.add_edge((room_x + i, room_y + j, 1), (room_x + i, room_y + j, 0))
 
@@ -56,10 +57,10 @@ def create_maze_graph(topology):
                 graph.add_edge((room_x + i, room_y + j, 0), (room_x + i, room_y + j, 3))
 
     ## generate the correct connections/doors between those 4 rooms
-    door_up_coords = (4, topology[0] + 1)
-    door_down_coords = (4, topology[1] + 5)
-    door_left_coords = (topology[2] + 1, 4)
-    door_right_coords = (topology[3] + 5, 4)
+    door_up_coords = (room_size+1, topology[0] + 1)
+    door_down_coords = (room_size+1, topology[1] + room_size+2)
+    door_left_coords = (topology[2] + 1, room_size+1)
+    door_right_coords = (topology[3] + room_size+2, room_size+1)
 
     graph.add_nodes_from([(door_up_coords[0],door_up_coords[1],dir) for dir in range(4)])
     graph.add_nodes_from([(door_down_coords[0],door_down_coords[1],dir) for dir in range(4)])
@@ -106,8 +107,8 @@ def create_maze_graph(topology):
 
     return graph
 
-def find_shortest_path(agent_pos, agent_dir, goal_pos, topology):
-    graph = create_maze_graph(topology)
+def find_shortest_path(agent_pos, agent_dir, goal_pos, topology, size):
+    graph = create_maze_graph(topology, size)
 
     paths = []
     for dir in range(4):
@@ -120,8 +121,8 @@ def find_shortest_path(agent_pos, agent_dir, goal_pos, topology):
 
     return shortest_path
 
-def find_all_shortest_paths(agent_pos, agent_dir, goal_pos, topology):
-    graph = create_maze_graph(topology)
+def find_all_shortest_paths(agent_pos, agent_dir, goal_pos, topology, size):
+    graph = create_maze_graph(topology, size)
 
     paths = []
     for dir in range(4):
@@ -137,12 +138,12 @@ def find_all_shortest_paths(agent_pos, agent_dir, goal_pos, topology):
 
     return shortest_paths
 
-def find_all_action_values(agent_pos, agent_dir, goal_pos, topology, gamma):
+def find_all_action_values(agent_pos, agent_dir, goal_pos, topology, gamma, size):
     """
         We will derive the action values (Q values) by enumerating all the actions and finding the state value
         in the corresponding next state. 
     """ 
-    graph = create_maze_graph(topology)
+    graph = create_maze_graph(topology, size)
     q_values = list()
 
     # Action 0 : Left (agent_dir decreases)
@@ -213,7 +214,7 @@ def find_all_action_values(agent_pos, agent_dir, goal_pos, topology, gamma):
 
     return q_values
 
-def does_path_exist(topology, path):
-    graph = create_maze_graph(topology)
+def does_path_exist(topology, path, size):
+    graph = create_maze_graph(topology, size)
 
     return nx.is_simple_path(graph, path)
