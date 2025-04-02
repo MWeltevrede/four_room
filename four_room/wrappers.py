@@ -94,19 +94,46 @@ class SparseFullyObsWrapper(FullyObsWrapper):
                             observation[3, i, j] = 1
 
 
-        # centre everything around the agent location
-        x_offset = env.grid.width // 2 - agent_location[0]
-        y_offset = env.grid.width // 2 - agent_location[1]
-        observation = np.roll(observation, (x_offset, y_offset), axis=(1,2))
+        # # centre everything around the agent location
+        # x_offset = env.grid.width // 2 - agent_location[0]
+        # y_offset = env.grid.width // 2 - agent_location[1]
+        # observation = np.roll(observation, (x_offset, y_offset), axis=(1,2))
 
         # transpose the x and y coordinates to be better aligned for plotting
         observation = np.transpose(observation[:, :, :], axes=(0,2,1))
         
         return observation
 
+class TransposeFullyObsWrapper(FullyObsWrapper):
+    def __init__(self, env):
+        super().__init__(env)
 
-def gym_wrapper(env): 
-    return ImgObsWrapper(
+        new_image_space = spaces.Box(
+            low=0,
+            high=255,
+            shape=(3, self.env.height, self.env.width,),  # number of cells
+            dtype="uint8",
+        )
+
+        self.observation_space = spaces.Dict(
+            {**self.observation_space.spaces, "image": new_image_space}
+        )
+
+    def observation(self, obs):
+        obs_dict = super().observation(obs)
+        full_grid = obs_dict['image']
+        full_grid = np.transpose(full_grid, axes=(2,1,0))
+        obs_dict['image'] = full_grid
+        return obs_dict
+
+def gym_wrapper(env, original_obs=True): 
+    if original_obs:
+        return ImgObsWrapper(
+                UndiscountedRewardWrapper(
+                    SparseActionsWrapper(
+                            TransposeFullyObsWrapper(env))))
+    else:
+        return ImgObsWrapper(
                 UndiscountedRewardWrapper(
                     SparseActionsWrapper(
                             SparseFullyObsWrapper(env))))
