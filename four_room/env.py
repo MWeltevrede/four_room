@@ -76,10 +76,8 @@ class FourRoomsEnv(MiniGridEnv):
         return valid_agent_pos, valid_goal_pos, valid_doors_pos
 
 
-    def __init__(self, agent_pos=None, agent_dir=None, goal_pos=None, doors_pos=None, max_steps=100, size=9, **kwargs):
+    def __init__(self, agent_pos=None, agent_dir=None, goal_pos=None, doors_pos=None, max_steps=100, size=19, **kwargs):
         """
-            This code is only works for environment size 9
-
             Parameters
             ----------
             agent_pos : list
