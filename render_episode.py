@@ -10,10 +10,9 @@ from four_room.shortest_path import find_all_action_values
 
 gym.register('MiniGrid-FourRooms-v1', FourRoomsEnv)
 
-size = 11
+size = 19
 
-# with open('configs/train.pl', 'rb') as file:
-with open('train11.pl', 'rb') as file:
+with open('configs/train.pl', 'rb') as file:
     train_config = dill.load(file)
 
 env = gym_wrapper(gym.make('MiniGrid-FourRooms-v1', 
