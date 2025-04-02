@@ -50,7 +50,7 @@ from four_room.shortest_path import find_all_action_values
 from four_room.utils import obs_to_state
 
 state = obs_to_state(obs)
-q_values = find_all_action_values(state[:2], state[2], state[3:5], state[5:], 0.99)
+q_values = find_all_action_values(state[:2], state[2], state[3:5], state[5:], 0.99, 19)
 optimal_action = np.argmax(q_values)
 ```
 to find the optimal action in a given state ```obs```.
